@@ -16,9 +16,10 @@ CATALINA_OPTS="${CATALINA_OPTS} -DcatalinaConnectorSecure=${CATALINA_CONNECTOR_S
 
 export CATALINA_OPTS
 
-
 # Start Confluence as the correct user
-if [ "${UID}" -eq 0 ]; then
+CURRENT_CONF_HOME_STAT=$(stat -c "%u" "${CONFLUENCE_HOME}")
+echo $(CURRENT_CONF_HOME_STAT)
+if [ ${CURRENT_CONF_HOME_STAT} -eq 0 ]; then
     echo "User is currently root. Will change directory ownership to ${RUN_USER}:${RUN_GROUP}, then downgrade permission to ${RUN_USER}"
     PERMISSIONS_SIGNATURE=$(stat -c "%u:%U:%a" "${CONFLUENCE_HOME}")
     EXPECTED_PERMISSIONS=$(id -u ${RUN_USER}):${RUN_USER}:700

@@ -1,8 +1,8 @@
-FROM mathysjtaljaard/base-java-jre
+FROM mathysjtaljaard/base-java-jre:jre-8_v1.1
 MAINTAINER Atlassian Confluence
 
-ENV RUN_USER            daemon
-ENV RUN_GROUP           daemon
+ENV RUN_USER            root
+ENV RUN_GROUP           root
 
 # https://confluence.atlassian.com/doc/confluence-home-and-other-important-directories-590259707.html
 ENV CONFLUENCE_HOME          /var/atlassian/application-data/confluence
@@ -17,16 +17,12 @@ EXPOSE 8091
 WORKDIR $CONFLUENCE_HOME
 
 CMD ["/entrypoint.sh", "-fg"]
-ENTRYPOINT ["/sbin/tini", "--"]
+ENTRYPOINT ["/bin/bash", "--"]
 
-#RUN apk update -qq \
-    #&& update-ca-certificates \
-    #&& apk add ca-certificates wget curl openssh bash procps openssl perl ttf-dejavu tini libc6-compat \
-    #&& rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
-RUN yum update -y
-RUN yum -y install ca-certificates rpm && rpm -Vv ca-certificates
-RUN yum -y install wget curl openssh bash procps openssl perl ttf-dejavu tini libc6-compat tar
-RUN rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
+RUN yum update -y \
+    && yum install -y ca-certificates wget curl openssh bash \
+        tar procps openssl perl ttf-dejavu tini libc6-compat \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/ /tmp/* /var/tmp/*
 
 COPY entrypoint.sh              /entrypoint.sh
 
