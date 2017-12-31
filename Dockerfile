@@ -1,4 +1,4 @@
-FROM mathysjtaljaard/base-java-jre:jre-8_v1.1
+FROM mathysjtaljaard/base-java-jre
 MAINTAINER Atlassian Confluence
 
 ENV RUN_USER            root
